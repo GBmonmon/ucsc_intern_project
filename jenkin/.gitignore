@@ -1,0 +1,6 @@
+.log
+.vagrant/
+picture/
+*.txt
+*.swp
+*.log

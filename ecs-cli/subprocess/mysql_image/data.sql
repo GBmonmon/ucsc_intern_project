@@ -1,0 +1,6 @@
+SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'test';
+CREATE DATABASE IF NOT EXISTS test;
+USE test;
+CREATE TABLE IF NOT EXISTS test(id TEXT, name TEXT, message TEXT);
+INSERT INTO test(id, name, message) VALUES ('1', 'gbmonmon', 'hello')
+

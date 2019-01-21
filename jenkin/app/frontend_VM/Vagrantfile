@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+#  Vagrantfile API/syntax version.
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+   # Mount Vagrantfile folder. This is default, but if the mount gets lost, reload will restore it with this.
+  config.vm.synced_folder ".","/vagrant"
+
+   # Make a private network
+  config.vm.network "private_network", ip: "10.0.1.16"
+  config.vm.network :forwarded_port, guest: 80, host: 5001
+
+
+   # This is using xenial64 as the base box
+  config.vm.box = "ubuntu/xenial64"
+
+
+  config.vm.provision "install_docker", type: "shell", inline: <<-SHELL
+
+    sudo apt-get -y update
+    sudo apt-get -y install \
+         apt-transport-https \
+         ca-certificates \
+         curl \
+         software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo apt-key fingerprint 0EBFCD88
+    sudo add-apt-repository \
+         "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+         $(lsb_release -cs) \
+         stable"
+    sudo apt-get -y update
+    sudo apt-get -y install docker-ce=17.09.0~ce-0~ubuntu
+    sudo groupadd docker
+    sudo usermod -a -G docker vagrant
+  SHELL
+
+
+  config.vm.provision "install_docker-compose", type: "shell", inline: <<-SHELL
+    sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    sudo docker-compose --version
+  SHELL
+
+
+
+  config.vm.provision "deployNamekocontainer", type: "shell", inline: <<-SHELL
+    
+    cd /vagrant/frontend_container/
+    sudo docker-compose up -d --build
+    cd ..
+  SHELL
+
+end
+

@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+
+  db:
+    image: gbmonmon/mysql:withscript
+    volumes:
+      -  ./subprocess/script.sql:/docker-entrypoint-initdb.d/script.sql
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: gbmonmon
+      MYSQL_PASSWORD: gbmonmon
+      MYSQL_DATABASE: djangoTest
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+  web:
+    image: gbmonmon/django_webapp:v2
+    ports:
+      - "8000:8000"
+      - "80:8000"
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+      restart_policy:
+        condition: on-failure
+    command: >
+        /bin/bash -c "python /code/mysite/manage.py migrate
+        && python /code/mysite/manage.py runserver 0.0.0.0:8000"
+
+networks:
+  backend:
+
+volumes:
+  db-data:

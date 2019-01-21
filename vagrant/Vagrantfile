@@ -1,0 +1,44 @@
+
+# Create and configure the AWS instance(s)
+Vagrant.configure('2') do |config|
+
+  # Use dummy AWS box
+  config.vm.box = 'aws-dummy'
+
+  # Provision
+  config.vm.provision "installtomcat", type:"shell", inline: <<-SHELL
+    sudo yum -y update && sudo yum -y install tomcat8 tomcat8-webapps && \
+    sudo service tomcat8 start
+ 
+  SHELL
+
+  # Network settings
+  #config.vm.network "public_network", ip: "192.168.0.17"
+
+  
+  # Folder settings
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+
+  # Specify AWS provider configuration
+  config.vm.provider :aws do |aws, override|
+    #aws.access_key_id = ENV["admin_AWS_ACCESS_KEY_ID"]
+    #aws.secret_access_key = ENV["admin_AWS_SECRET_ACCESS_KEY"]
+    #aws.aws_dir = ENV['HOME'] + "/.aws"
+    aws.aws_profile = 'default'
+
+    # Specify SSH keypair to use
+    aws.keypair_name = 'admin-key-us-west-1'
+
+    # Specify region, AMI ID, and security group(s)
+    # this line will be ignored if aws.aws_profile is used. Set AWS_DEFAULT_REGION=us-west-1
+    aws.ami = 'ami-0bdb828fd58c52235'
+    aws.subnet_id = 'subnet-02d53692d320b5c41'
+    aws.instance_type = 't2.micro'
+    aws.security_groups = ['sg-0ac55dc60d7f0ab69'] # If you use the default VPC, the security groups has to be its name here.
+    aws.tags = { 'Name' => 'tomcat_in_ec2' }
+    # Specify username and private key path
+    override.ssh.username = 'ec2-user'
+    override.ssh.private_key_path = '/Users/Jerry/.ssh/zxc22022444/ZAdministrator/admin-key-us-west-1.pem'
+  end
+end

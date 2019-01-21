@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  frontend:
+    build: .
+    ports:
+      - "80:8000"
+    command: nameko run frontendserver
+    networks:
+      - myappnet
+
+networks:
+  myappnet:

@@ -1,0 +1,41 @@
+version: '2'
+
+# t2.micro is small, if you don't set the memory for the container, Amazon will default it to 512MB
+
+
+
+  
+services:
+  mysql:
+    image: gbmonmon/custommysql
+    ports: 
+      - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
+#    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: gbmonmon
+    volumes:
+      - /mysql_data/data:/var/lib/mysql # Specify a absolute path mapping
+      #- datavolume:/var/lib/mysql 
+    mem_limit: 357649k
+#    networks:
+#      ipam:
+#        ipv4_address: 172.18.18.5
+
+  tomcat:
+    image: gbmonmon/customtomcat
+    ports:
+      - 80:8080
+#    container_name: myTomcat
+
+
+#networks:
+#  app_net:
+#    driver: bridge
+#    driver_opts:
+#      com.docker.network.enable_ipv6: "false"
+#    ipam:
+#      driver: default
+#      config:
+#      - subnet: 172.18.18.0/24
+#        gateway: 172.18.18.1

@@ -1,0 +1,53 @@
+
+{
+    "manager":{
+        
+        "access_key": "",
+        "secret_key": "",
+        "region": "",
+        "availability_zone": "",
+        "security_groups": "sg-0cf71da238de379fe",
+        "keypair_name": "admin-key-us-west-1",
+        "ssh_username": "ubuntu",
+        "ssh_private_key_path": "~/.ssh/zxc22022444/ZAdministrator/admin-key-us-west-1.pem",
+        "subnet_id" : "subnet-02d53692d320b5c41",
+        "instances": {
+            "manager-001": {
+    	    "ami_id": "ami-063aa838bd7631e0b",
+                "instance_type": "t2.micro",
+    	    "tags": {
+    	       "Name": "Node-001"
+                }
+             }
+        }        
+    },
+
+    "worker":{
+ 
+        "access_key": "",
+        "secret_key": "",
+        "region": "",
+        "availability_zone": "",
+        "security_groups": "sg-082296dda4cfdce11",
+        "keypair_name": "admin-key-us-west-1",
+        "ssh_username": "ubuntu",
+        "ssh_private_key_path": "~/.ssh/zxc22022444/ZAdministrator/admin-key-us-west-1.pem",
+        "subnet_id" : "subnet-02d53692d320b5c41",
+        "instances": {
+            "worker-001": {
+    	    "ami_id": "ami-063aa838bd7631e0b",
+                "instance_type": "t2.micro",
+    	    "tags": {
+    	       "Name": "Node-002"
+                }
+            },
+            "worker-002": {
+    	    "ami_id": "ami-063aa838bd7631e0b",
+                "instance_type": "t2.micro",
+    	    "tags": {
+    	       "Name": "Node-003"
+                }
+            }
+        }        
+    }
+}
